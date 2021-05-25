@@ -1,0 +1,57 @@
+---
+- name: update web servers
+  hosts: centos
+  become: yes
+
+  handlers:
+  - name: website is deployed
+    git:
+      repo : https://github.com/biju022/ecomm.git
+      dest: /var/www/html
+
+  - name: Restart HTTPD
+    service:
+      name: httpd
+      state: restarted
+
+  - name: web server is started
+    service:
+      name: httpd
+      state: started
+
+  tasks:
+
+  - name: SELinux Permissive
+    selinux:
+      policy: targeted
+      state: permissive
+
+  - name: ensure web server is installed
+    package:
+      name: httpd
+      state: present
+    notify:
+     - web server is started
+     - website is deployed
+
+  - name: ensure web server is enabled
+    service:
+      name: httpd
+      enabled: yes
+
+  - name: ensure git is installed
+    package:
+     name: git
+     state: present
+
+  - name: ensure port updated
+    copy:
+     src: httpd.conf
+     dest: /etc/httpd/conf/httpd.conf
+    notify:
+     - Restart HTTPD
+
+ 
+...
+
+

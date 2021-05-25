@@ -1,0 +1,38 @@
+---
+- name: update ubuntu servers
+  hosts: ubuntu
+  become: yes
+
+  tasks:
+  - name: ensure web server is installed
+    package:
+      name: apache2
+      state: present
+    notify:
+    - index page is removed
+    - ensure website is deployed
+
+  - name: ensure web server is started
+    service:
+      name: apache2
+      state: started
+
+  - name: ensure web server is enabled
+    service:
+      name: apache2
+      enabled: yes
+
+  handlers:
+
+  - name: index page is removed
+    file:
+      path: /var/www/html/index.html
+      state: absent
+
+  - name: ensure website is deployed
+    git:
+      repo: https://github.com/biju022/ecomm.git
+      dest: /var/www/html
+...
+
+

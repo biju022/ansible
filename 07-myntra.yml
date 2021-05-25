@@ -1,0 +1,18 @@
+---
+- name: update web servers
+  hosts: web
+  become: yes
+
+  tasks:
+  - name: ensure git is installed
+    package:
+      name: git
+      state: present
+
+  - name: ensure website is deployed
+    git:
+      repo : https://github.com/biju022/ecomm.git
+      dest: /var/www/html
+...
+
+

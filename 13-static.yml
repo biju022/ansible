@@ -1,0 +1,14 @@
+---
+- name: update web servers
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: ensurestatic page
+    copy:
+      src: static.html
+      dest: /var/www/html/static.html
+
+...
+
+
